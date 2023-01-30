@@ -6,11 +6,11 @@ from backend.auth_app.models import GalaTechProfile, GalaTechUser
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    """Product JSON serializer"""
+    """JSON serializer for UserProfile"""
 
     class Meta:
         model = GalaTechProfile
-        exclude = ('user_id')
+        exclude = ('user',)
 
 
 # Serializer to Register User
@@ -31,6 +31,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = GalaTechUser
         fields = ('email', 'password', 'password2',
                   )
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:

@@ -1,18 +1,27 @@
 from django.shortcuts import render
-from rest_framework import response
+from rest_framework import response, status
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from backend.auth_app.serializers import UserRegisterSerializer
+from backend.auth_app.serializers import UserRegisterSerializer, UserProfileSerializer
 
 
-class UserRegisterView(APIView):
+class UserRegisterView(CreateAPIView):
+    """User Registration view"""
+    serializer_class = UserRegisterSerializer
+    permission_classes = (AllowAny,)
 
-    def post(self, request, *args, **kwargs):
-        serializer = UserRegisterSerializer(data=request.data)
+
+class CreateUserProfileView(APIView):
+    """
+    User profile create view
+    should add user_id to profile
+    """
+
+    def post(self, request):
+        serializer = UserProfileSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        data = serializer.validated_data
-
-        print(data)
-
-        return response.Response(data={'username': data.get('username'),})
+        serializer.save(user_id=request.user.id)
+        return Response(status=status.HTTP_201_CREATED)
