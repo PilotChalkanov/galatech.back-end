@@ -1,3 +1,5 @@
+from urllib import request
+
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -5,12 +7,20 @@ from rest_framework.validators import UniqueValidator
 from backend.auth_app.models import GalaTechProfile, GalaTechUser
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+
+class UserSerializer(serializers.ModelSerializer):
+    """JSON serializer for UserProfile"""
+    class Meta:
+        model = GalaTechUser
+        fields = "__all__"
+
+class ProfileSerializer(serializers.ModelSerializer):
     """JSON serializer for UserProfile"""
 
     class Meta:
         model = GalaTechProfile
         exclude = ('user',)
+
 
 
 # Serializer to Register User

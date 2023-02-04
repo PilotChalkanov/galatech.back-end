@@ -1,12 +1,12 @@
 from django.urls import path
 from backend.auth_app.views import user_views
 from backend.auth_app.views.jwt_views import MyTokenObtainPairView
-from backend.auth_app.views.user_views import CreateUserProfileView
+from backend.auth_app.views.user_views import ProfileView
 
 urlpatterns = (
     path("users/login/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("users/register/", user_views.UserRegisterView.as_view(), name="user_register"),
-    path("users/profile/", CreateUserProfileView.as_view(), name="profile_create"),
+    path("users/profile/", ProfileView.as_view(), name="profile"),
     # path("auth_app/profile/edit/<int:pk>", update_profile, name="profile-edit"),
     # path("auth_app/profile/delete/<int:pk>", DeleteProfileView.as_view(), name="delete-profile"),
     # path("auth_app/logout/", UserLogoutView.as_view(), name="logout"),
