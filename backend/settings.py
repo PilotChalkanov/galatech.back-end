@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-6wk*0gcbs(cl(2dl_fc4pet_i!zhijbf4&fh1lbdsrnzrgzmyg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -215,6 +215,12 @@ LOGGING = {
     },
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ALLOWED_ORIGINS = [
+"http://localhost:3000",
+"http://127.0.0.1:3000"
+]
 
 AUTH_USER_MODEL = "auth_app.GalaTechUser"
