@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from backend.auth_app.models import GalaTechProfile
+from backend.auth_app.models import GalaTechProfile, GalaTechUser
 from backend.auth_app.serializers import UserRegisterSerializer, UserSerializer, ProfileSerializer
 
 
@@ -13,13 +13,30 @@ class UserRegisterView(CreateAPIView):
     """User Registration view"""
     serializer_class = UserRegisterSerializer
     permission_classes = (AllowAny,)
+    model = GalaTechUser
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            email = serializer.data.get('email')
+
+            if GalaTechUser.objects.filter(email=email):
+                return Response({'error': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+            errors = serializer.errors
+            if errors['password']:
+                return Response(
+                    {'error': 'The password must contain at least 8 characters, '
+                              'it must NOT contain only numbers or only letters '},
+                    status=status.HTTP_400_BAD_REQUEST)
+
+            print('')
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileView(APIView):
@@ -50,7 +67,6 @@ class ProfileView(APIView):
         }
         return Response(data, status=200)
 
-
     def post(self, request):
         serializer = ProfileSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -62,7 +78,5 @@ class ProfileView(APIView):
 
         serializer.is_valid(raise_exception=True)
 
-
         serializer.save(user_id=request.user.id)
         return Response(status=status.HTTP_200_OK)
-

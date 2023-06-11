@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from backend.api.models import Product, ProductCategory
@@ -30,16 +31,19 @@ class CategoryProductSerializer(serializers.ModelSerializer):
 
 class ProductListView(ListAPIView):
     """Main shop View for Product"""
+    permission_classes = (AllowAny,)
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class SingleProductView(RetrieveUpdateDestroyAPIView):
     """The Product View which has all the methods implemented"""
+    permission_classes = (AllowAny,)
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class CategoryListView(ListAPIView):
+
     queryset = ProductCategory.objects.all()
     serializer_class = FullProductCategorySerializer
