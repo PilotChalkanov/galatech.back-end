@@ -4,6 +4,6 @@ from backend.api.views import ProductListView, SingleProductView, CategoryListVi
 
 urlpatterns = (
     path('products/', ProductListView.as_view(), name='shop-products'),
-    path('product/<int:pk>', SingleProductView.as_view(), name='single-product'),
+    path('products/<int:pk>', SingleProductView.as_view(), name='single-product'),
     path('product/categories/', CategoryListView.as_view(), name='categories'),
 )
